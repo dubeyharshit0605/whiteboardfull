@@ -12,4 +12,7 @@
 - Both package audits reported zero known vulnerabilities after the lockfile
   updates. Before the updates the backend audit reported 11 advisories, and
   the inherited CRA build reported an undeclared Babel dependency.
-- Browser interaction checks and live Render/Atlas verification are pending.
+- Deployed to [Render](https://whiteboardfull.onrender.com/) with MongoDB Atlas.
+  Verified drawing and undo in Chrome. The live app, sign-in and registration
+  pages returned HTTP 200, and the [health endpoint](https://whiteboardfull.onrender.com/healthz)
+  reported a database connection. Live sign-in and collaboration were not exercised.

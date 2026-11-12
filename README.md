@@ -1,5 +1,11 @@
 # Whiteboard Full
 
+[Open the live whiteboard](https://whiteboardfull.onrender.com/) ·
+[Sign in](https://whiteboardfull.onrender.com/login) ·
+[Create an account](https://whiteboardfull.onrender.com/register) ·
+[Service health](https://whiteboardfull.onrender.com/healthz) ·
+[Build and test runs](https://github.com/dubeyharshit0605/whiteboardfull/actions)
+
 Draw with shapes, text, and freehand strokes. Create an account to save boards
 and share them by email with other registered users. Updates appear for collaborators
 after a completed edit. You can use the home board as an unsaved scratchpad.
@@ -20,7 +26,8 @@ Use Node.js 22.12 or newer and a running MongoDB instance.
 
 ## Verify
 
-Build the frontend and run `npm test --prefix backend` with `TEST_MONGODB_URI`
+See the [build log](harness/build-log.md) for the deployment checks. Build the
+frontend and run `npm test --prefix backend` with `TEST_MONGODB_URI`
 set to an isolated local MongoDB instance. The suite creates and drops its own
 test database. GitHub Actions runs the build and tests with a MongoDB service.
 
@@ -28,7 +35,7 @@ test database. GitHub Actions runs the build and tests with a MongoDB service.
 
 1. In Atlas, create a cluster and a database user with `readWrite` on the
    application database. Include the database name in the connection string.
-2. In Render, create a Blueprint using this repo and its root `render.yaml`.
+2. In Render, create a Blueprint using this repo and its root [`render.yaml`](render.yaml).
    Supply the Atlas connection string as the secret `MONGODB_URI` in Render.
    Render generates `JWT_SECRET`.
 3. Add Render's outbound IP ranges for the service to the Atlas project

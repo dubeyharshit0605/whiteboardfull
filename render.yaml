@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: whiteboardfull
+    runtime: node
+    plan: free
+    branch: main
+    buildCommand: npm ci --prefix whiteboard-tutorial --include=dev && npm run build --prefix whiteboard-tutorial && npm ci --prefix backend --omit=dev
+    startCommand: npm start --prefix backend
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGODB_URI
+        sync: false

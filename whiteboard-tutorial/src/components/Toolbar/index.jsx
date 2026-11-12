@@ -32,71 +32,71 @@ const Toolbar = () => {
 
   return (
     <div className={classes.container}>
-      <div
+      <button type="button" aria-label="Brush"
         className={cx(classes.toolItem, {
           [classes.active]: activeToolItem === TOOL_ITEMS.BRUSH,
         })}
         onClick={() => changeToolHandler(TOOL_ITEMS.BRUSH)}
       >
         <FaPaintBrush />
-      </div>
-      <div
+      </button>
+      <button type="button" aria-label="Line"
         className={cx(classes.toolItem, {
           [classes.active]: activeToolItem === TOOL_ITEMS.LINE,
         })}
         onClick={() => changeToolHandler(TOOL_ITEMS.LINE)}
       >
         <FaSlash />
-      </div>
-      <div
+      </button>
+      <button type="button" aria-label="Rectangle"
         className={cx(classes.toolItem, {
           [classes.active]: activeToolItem === TOOL_ITEMS.RECTANGLE,
         })}
         onClick={() => changeToolHandler(TOOL_ITEMS.RECTANGLE)}
       >
         <LuRectangleHorizontal />
-      </div>
-      <div
+      </button>
+      <button type="button" aria-label="Ellipse"
         className={cx(classes.toolItem, {
           [classes.active]: activeToolItem === TOOL_ITEMS.CIRCLE,
         })}
         onClick={() => changeToolHandler(TOOL_ITEMS.CIRCLE)}
       >
         <FaRegCircle />
-      </div>
-      <div
+      </button>
+      <button type="button" aria-label="Arrow"
         className={cx(classes.toolItem, {
           [classes.active]: activeToolItem === TOOL_ITEMS.ARROW,
         })}
         onClick={() => changeToolHandler(TOOL_ITEMS.ARROW)}
       >
         <FaArrowRight />
-      </div>
-      <div
+      </button>
+      <button type="button" aria-label="Eraser"
         className={cx(classes.toolItem, {
           [classes.active]: activeToolItem === TOOL_ITEMS.ERASER,
         })}
         onClick={() => changeToolHandler(TOOL_ITEMS.ERASER)}
       >
         <FaEraser />
-      </div>
-      <div
+      </button>
+      <button type="button" aria-label="Text"
         className={cx(classes.toolItem, {
           [classes.active]: activeToolItem === TOOL_ITEMS.TEXT,
         })}
         onClick={() => changeToolHandler(TOOL_ITEMS.TEXT)}
       >
         <FaFont />
-      </div>
-      <div className={classes.toolItem} onClick={undo}>
+      </button>
+      <button type="button" aria-label="Undo" className={classes.toolItem} onClick={undo}>
         <FaUndoAlt />
-      </div>
-      <div className={classes.toolItem} onClick={redo}>
+      </button>
+      <button type="button" aria-label="Redo" className={classes.toolItem} onClick={redo}>
         <FaRedoAlt />
-      </div>
-      <div className={classes.toolItem} onClick={handleDownloadClick}>
+      </button>
+      <button type="button" aria-label="Export PNG" className={classes.toolItem} onClick={handleDownloadClick}>
         <FaDownload />
-      </div>
+      </button>
     </div>
   );
 };

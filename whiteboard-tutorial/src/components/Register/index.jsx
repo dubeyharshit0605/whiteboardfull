@@ -1,19 +1,21 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import styles from './index.module.css';
-import boardContext from '../../store/board-context';
 
-const Login = () => {
+const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
-  const { isUserLoggedIn,setUserLoginStatus } = useContext(boardContext);
 
-  console.log(isUserLoggedIn);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      alert("Passwords don't match");
+      return;
+    }
     try {
-      const response = await fetch('/api/users/login', {
+      const response = await fetch('/api/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -22,22 +24,21 @@ const Login = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem('whiteboard_user_token', data.token);
-        setUserLoginStatus(true);
-        navigate('/');
+        alert('Registration successful');
+        navigate('/login');
       } else {
-        alert(data.message || 'Login failed');
+        alert(data.error || 'Registration failed');
       }
     } catch (error) {
-      console.error('Login error:', error);
-      alert('An error occurred during login');
+      console.error('Registration error:', error);
+      alert('An error occurred during registration');
     }
   };
 
   return (
-    <div className={styles.loginContainer}>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit} className={styles.loginForm}>
+    <div className={styles.registerContainer}>
+      <h2>Register</h2>
+      <form onSubmit={handleSubmit} className={styles.registerForm}>
         <input
           type="email"
           placeholder="Email"
@@ -52,13 +53,20 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Login</button>
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
+        <button type="submit">Register</button>
       </form>
       <p>
-        Don't have an account? <Link to="/register">Register here</Link>
+        Already have an account? <Link to="/login">Login here</Link>
       </p>
     </div>
   );
 };
 
-export default Login;
+export default Register;

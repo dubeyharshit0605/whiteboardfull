@@ -1,58 +1,48 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 
-const SECRET_KEY = process.env.JWT_SECRET;
+function credentials(body) {
+  const { email, password } = body || {};
+  if (typeof email !== "string" || typeof password !== "string") return null;
+  const normalized = email.trim().toLowerCase();
+  if (normalized.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized) ||
+      password.length < 8 || Buffer.byteLength(password) > 72) return null;
+  return { email: normalized, password };
+}
 
-// Register User
-exports.registerUser = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        if (!email || !password) {
-            return res.status(400).json({ error: "All fields are required" });
-        }
-
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ error: "User already exists" });
-        }
-
-        const newUser = new User({ email, password });
-        await newUser.save();
-
-        res.status(201).json({ message: "User registered successfully!" });
-    } catch (error) {
-        res.status(500).json({ error: "Registration failed", details: error.message });
-    }
+exports.registerUser = async (req, res, next) => {
+  const input = credentials(req.body);
+  if (!input) return res.status(400).json({ error: "Enter a valid email and a password between 8 and 72 bytes" });
+  try {
+    await User.create(input);
+    res.status(201).json({ message: "Account created" });
+  } catch (error) {
+    if (error.code === 11000) return res.status(409).json({ error: "Email already registered" });
+    next(error);
+  }
 };
 
-// Login User
-exports.loginUser = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        const user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ error: "Invalid credentials" });
-
-        const isMatch = await user.comparePassword(password);
-        if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
-
-        const token = jwt.sign({ userId: user._id }, SECRET_KEY, { expiresIn: "7d" });
-
-        res.json({ message: "Login successful", token });
-    } catch (error) {
-        res.status(500).json({ error: "Login failed", details: error.message });
+exports.loginUser = async (req, res, next) => {
+  const input = credentials(req.body);
+  if (!input) return res.status(400).json({ error: "Invalid credentials" });
+  try {
+    const user = await User.findOne({ email: input.email });
+    if (!user || !await user.comparePassword(input.password)) {
+      return res.status(400).json({ error: "Invalid credentials" });
     }
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    res.json({ token });
+  } catch (error) {
+    next(error);
+  }
 };
 
-// Get User Details
-exports.getUser = async (req, res) => {
-    try {
-        const user = await User.findById(req.userId).select("-password");
-        if (!user) return res.status(404).json({ error: "User not found" });
-
-        res.json(user);
-    } catch (error) {
-        res.status(500).json({ error: "Failed to get user", details: error.message });
-    }
+exports.getUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.userId).select("email");
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
 };

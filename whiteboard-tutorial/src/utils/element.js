@@ -1,7 +1,7 @@
 import { ARROW_LENGTH, TOOL_ITEMS } from "../constants";
 import getStroke from "perfect-freehand";
 
-import rough from "roughjs/bin/rough";
+import rough from "roughjs";
 import { getArrowHeadsCoordinates, isPointCloseToLine } from "./math";
 
 const gen = rough.generator();
@@ -43,7 +43,6 @@ export const createElement = (
       const brushElement = {
         id,
         points: [{ x: x1, y: y1 }],
-        path: new Path2D(getSvgPathFromStroke(getStroke([{ x: x1, y: y1 }]))),
         type,
         stroke,
       };
@@ -106,6 +105,7 @@ export const isPointNearElement = (element, pointX, pointY) => {
       const elPath = new Path2D(getSvgPathFromStroke(getStroke(element.points)));
       return context.isPointInPath(elPath, pointX, pointY);
     case TOOL_ITEMS.TEXT:
+      context.save();
       context.font = `${element.size}px Caveat`;
       context.fillStyle = element.stroke;
       const textWidth = context.measureText(element.text).width;
